@@ -9,8 +9,23 @@ interface HeroProps {
 }
 
 export default function Hero({ onSwitchToHeritage, weatherDescription, temperature }: HeroProps) {
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // Try to unmute after video loads (may still be blocked by browser autoplay policies)
+    const attemptUnmute = () => {
+      if (videoRef.current) {
+        videoRef.current.muted = false;
+        setIsMuted(false);
+      }
+    };
+
+    // Try to unmute after a short delay
+    const timeoutId = setTimeout(attemptUnmute, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
@@ -35,6 +50,7 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
           ref={videoRef}
           autoPlay
           loop
+          muted={isMuted}
           playsInline
           className="absolute inset-0 w-full h-full object-cover filter saturate-[1.15] brightness-[0.45] contrast-[1.05]"
           style={{ objectPosition: "center 30%" }}
