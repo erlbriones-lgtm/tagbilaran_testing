@@ -12,6 +12,7 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
   const [isMuted, setIsMuted] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const heroSectionRef = useRef<HTMLElement>(null);
 
   const attemptUnmute = () => {
     if (videoRef.current && !hasInteracted) {
@@ -26,6 +27,13 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
       } catch (e) {
         setIsMuted(true);
       }
+    }
+  };
+
+  const muteVideo = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      setIsMuted(true);
     }
   };
 
@@ -55,14 +63,29 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
 
     document.addEventListener('click', handleGlobalClick, { once: true });
 
+    // Scroll detection to mute when hero section is out of view
+    const handleScroll = () => {
+      if (heroSectionRef.current) {
+        const rect = heroSectionRef.current.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (!isVisible && !isMuted) {
+          muteVideo();
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
     return () => {
       clearTimeout(timeoutId);
       if (video) {
         video.removeEventListener('loadeddata', handleLoadedData);
       }
       document.removeEventListener('click', handleGlobalClick);
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [hasInteracted]);
+  }, [hasInteracted, isMuted]);
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
@@ -73,6 +96,7 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
   return (
     <section
       id="gateway-hero"
+      ref={heroSectionRef}
       className="relative min-h-[42vh] sm:min-h-[48vh] md:min-h-[56vh] lg:min-h-[75vh] xl:min-h-[82vh] flex items-center justify-center bg-transparent px-4 sm:px-8 md:px-12 lg:px-24 pt-24 sm:pt-28 md:pt-32 lg:pt-40 pb-10 sm:pb-12 md:pb-14 lg:pb-20 select-none animate-fade-in"
     >
       {/* 
