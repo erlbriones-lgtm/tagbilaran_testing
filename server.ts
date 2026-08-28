@@ -882,6 +882,11 @@ async function start() {
         }
       }
     } catch (e) {}
+    // For Vercel, check if dist exists in current directory
+    const distCandidate = path.join(process.cwd(), "dist");
+    if (fs.existsSync(distCandidate)) {
+      return distCandidate;
+    }
     return path.join(process.cwd(), "dist");
   };
 
