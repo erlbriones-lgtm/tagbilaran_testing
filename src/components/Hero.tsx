@@ -9,23 +9,37 @@ interface HeroProps {
 }
 
 export default function Hero({ onSwitchToHeritage, weatherDescription, temperature }: HeroProps) {
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [showAudioPrompt, setShowAudioPrompt] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroSectionRef = useRef<HTMLElement>(null);
+
+  const enableAudio = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = false;
+      setIsMuted(false);
+      setHasInteracted(true);
+      setShowAudioPrompt(false);
+    }
+  };
 
   const attemptUnmute = () => {
     if (videoRef.current && !hasInteracted) {
       try {
         videoRef.current.muted = false;
-        videoRef.current.play().catch(() => {
-          // If play fails, keep muted
+        videoRef.current.play().then(() => {
+          setIsMuted(false);
+          setHasInteracted(true);
+          setShowAudioPrompt(false);
+        }).catch(() => {
+          // If play fails, keep muted but hide prompt
           setIsMuted(true);
+          setShowAudioPrompt(false);
         });
-        setIsMuted(false);
-        setHasInteracted(true);
       } catch (e) {
         setIsMuted(true);
+        setShowAudioPrompt(false);
       }
     }
   };
@@ -38,6 +52,14 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
   };
 
   useEffect(() => {
+    // Ensure video plays immediately
+    const video = videoRef.current;
+    if (video) {
+      video.play().catch((e) => {
+        console.log('Video autoplay failed:', e);
+      });
+    }
+
     // Try to unmute immediately
     attemptUnmute();
 
@@ -47,21 +69,11 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
     };
 
     // Try again after a delay
-    const timeoutId = setTimeout(attemptUnmute, 500);
+    const timeoutId = setTimeout(attemptUnmute, 1000);
 
-    const video = videoRef.current;
     if (video) {
       video.addEventListener('loadeddata', handleLoadedData);
     }
-
-    // Add global click handler to unmute on first interaction
-    const handleGlobalClick = () => {
-      if (!hasInteracted) {
-        attemptUnmute();
-      }
-    };
-
-    document.addEventListener('click', handleGlobalClick, { once: true });
 
     // Scroll detection to mute when hero section is out of view
     const handleScroll = () => {
@@ -82,7 +94,6 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
       if (video) {
         video.removeEventListener('loadeddata', handleLoadedData);
       }
-      document.removeEventListener('click', handleGlobalClick);
       window.removeEventListener('scroll', handleScroll);
     };
   }, [hasInteracted, isMuted]);
@@ -133,11 +144,24 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
         <div className="absolute top-1/2 right-1/3 w-2.5 h-2.5 rounded-full bg-[#32e875]/40 blur-[1px] animate-float-reverse pointer-events-none z-20" />
         <div className="absolute bottom-1/3 left-2/3 w-1.5 h-1.5 rounded-full bg-white/30 blur-[1px] animate-float-slow pointer-events-none z-20" />
 
+        {/* Audio Enable Prompt - Shows when audio is blocked */}
+        {showAudioPrompt && (
+          <button
+            onClick={enableAudio}
+            className="absolute bottom-8 right-8 z-30 bg-[#32e875]/80 hover:bg-[#32e875] backdrop-blur-sm text-white px-6 py-3 rounded-full transition-all duration-300 border border-white/30 hover:border-white/50 font-semibold text-sm flex items-center gap-2 animate-pulse"
+            aria-label="Enable Audio"
+          >
+            <Volume2 className="w-5 h-5" />
+            Enable Audio
+          </button>
+        )}
+
         {/* Mute Button - Bottom Right */}
         <button
           onClick={toggleMute}
           className="absolute bottom-8 right-8 z-30 bg-black/40 hover:bg-black/60 backdrop-blur-sm text-white p-3 rounded-full transition-all duration-300 border border-white/20 hover:border-white/40 group"
           aria-label={isMuted ? "Unmute" : "Mute"}
+          style={{ display: showAudioPrompt ? 'none' : 'flex' }}
         >
           {isMuted ? (
             <VolumeX className="w-5 h-5" />
