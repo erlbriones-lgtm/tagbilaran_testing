@@ -9,23 +9,60 @@ interface HeroProps {
 }
 
 export default function Hero({ onSwitchToHeritage, weatherDescription, temperature }: HeroProps) {
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    // Try to unmute after video loads (may still be blocked by browser autoplay policies)
-    const attemptUnmute = () => {
-      if (videoRef.current) {
+  const attemptUnmute = () => {
+    if (videoRef.current && !hasInteracted) {
+      try {
         videoRef.current.muted = false;
+        videoRef.current.play().catch(() => {
+          // If play fails, keep muted
+          setIsMuted(true);
+        });
         setIsMuted(false);
+        setHasInteracted(true);
+      } catch (e) {
+        setIsMuted(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    // Try to unmute immediately
+    attemptUnmute();
+
+    // Try again after video loads
+    const handleLoadedData = () => {
+      attemptUnmute();
+    };
+
+    // Try again after a delay
+    const timeoutId = setTimeout(attemptUnmute, 500);
+
+    const video = videoRef.current;
+    if (video) {
+      video.addEventListener('loadeddata', handleLoadedData);
+    }
+
+    // Add global click handler to unmute on first interaction
+    const handleGlobalClick = () => {
+      if (!hasInteracted) {
+        attemptUnmute();
       }
     };
 
-    // Try to unmute after a short delay
-    const timeoutId = setTimeout(attemptUnmute, 1000);
+    document.addEventListener('click', handleGlobalClick, { once: true });
 
-    return () => clearTimeout(timeoutId);
-  }, []);
+    return () => {
+      clearTimeout(timeoutId);
+      if (video) {
+        video.removeEventListener('loadeddata', handleLoadedData);
+      }
+      document.removeEventListener('click', handleGlobalClick);
+    };
+  }, [hasInteracted]);
 
   const toggleMute = () => {
     setIsMuted(!isMuted);
