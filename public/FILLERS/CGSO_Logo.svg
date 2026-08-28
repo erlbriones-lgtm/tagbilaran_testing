@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <!-- Outer Green Ring -->
+  <circle cx="250" cy="250" r="236" fill="none" stroke="#6CE600" stroke-width="20" />
+  
+  <!-- Text Ring Background -->
+  <circle cx="250" cy="250" r="226" fill="#FFFFFF" />
+  
+  <!-- Curved Paths for Text -->
+  <defs>
+    <!-- Top arc path for SERVICE • PERFORMANCE • COMMITMENT -->
+    <path id="topArc" d="M 55,250 A 195,195 0 1,1 445,250" fill="none" />
+    <!-- Bottom arc path for TAGBILARAN CITY -->
+    <path id="bottomArc" d="M 65,250 A 185,185 0 0,0 435,250" fill="none" />
+  </defs>
+  
+  <!-- Top Text -->
+  <text font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="800" font-size="28" fill="#757D8A" letter-spacing="3">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">
+      SERVICE • PERFORMANCE • COMMITMENT
+    </textPath>
+  </text>
+  
+  <!-- Bottom Text with Stars -->
+  <text font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="#6CE600" letter-spacing="4">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">
+      ★  TAGBILARAN CITY  ★
+    </textPath>
+  </text>
+
+  <!-- Inner Green Circle -->
+  <circle cx="250" cy="250" r="145" fill="#18D06B" />
+  <circle cx="250" cy="250" r="145" fill="none" stroke="#6CE600" stroke-width="12" />
+
+  <!-- White Building Icon -->
+  <g fill="#FFFFFF">
+    <!-- Roof Triangle -->
+    <polygon points="250,132 170,178 330,178" />
+    <!-- Roof Circle -->
+    <circle cx="250" cy="160" r="9" fill="#18D06B" />
+    <!-- Pillars -->
+    <rect x="188" y="188" width="16" height="52" rx="3" />
+    <rect x="223" y="188" width="16" height="52" rx="3" />
+    <rect x="261" y="188" width="16" height="52" rx="3" />
+    <rect x="296" y="188" width="16" height="52" rx="3" />
+    <!-- Pillar Base & Cap -->
+    <rect x="180" y="182" width="140" height="7" rx="2" />
+    <rect x="175" y="240" width="150" height="7" rx="2" />
+  </g>
+
+  <!-- GSO Text -->
+  <text x="250" y="328" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="88" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">
+    GSO
+  </text>
+</svg>
