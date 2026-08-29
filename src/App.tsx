@@ -445,21 +445,13 @@ function AppContent() {
       case "home":
         return "radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.2) 0%, transparent 50%), radial-gradient(circle at 80% 30%, rgba(50, 232, 117, 0.3) 0%, transparent 60%), linear-gradient(to bottom, #114216 0%, #032107 100%)";
       case "growth":
-        return "#ffffff";
       case "heritage":
-        return "#ffffff";
       case "shops":
-        return "#ffffff";
       case "downloadables":
-        return "#ffffff";
       case "barangay":
-        return "#ffffff";
       case "saulog":
-        return "#ffffff";
       case "travel":
-        return "#ffffff";
       case "contact":
-        return "#ffffff";
       case "about":
         return "radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.22) 0%, transparent 50%), radial-gradient(circle at 85% 35%, rgba(50, 232, 117, 0.42) 0%, transparent 60%), radial-gradient(circle at 20% 70%, rgba(5, 70, 26, 0.38) 0%, transparent 60%), radial-gradient(circle at 75% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%), linear-gradient(to bottom, #32e875 0%, #05461a 95vh, #02200a 100%)";
       default:
