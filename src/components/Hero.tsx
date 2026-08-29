@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
-import { Volume2, VolumeX } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 interface HeroProps {
   onSwitchToHeritage: () => void;
@@ -9,16 +8,7 @@ interface HeroProps {
 }
 
 export default function Hero({ onSwitchToHeritage, weatherDescription, temperature }: HeroProps) {
-  const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const heroSectionRef = useRef<HTMLElement>(null);
-
-  const muteVideo = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = true;
-      setIsMuted(true);
-    }
-  };
 
   useEffect(() => {
     const video = videoRef.current;
@@ -29,42 +19,15 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
         console.log('Autoplay with audio failed, trying muted:', e);
         // If that fails, try muted
         video.muted = true;
-        setIsMuted(true);
         video.play().catch((e2) => {
           console.log('Autoplay muted failed:', e2);
         });
       });
     }
-
-    // Scroll detection to mute when hero section is out of view
-    const handleScroll = () => {
-      if (heroSectionRef.current) {
-        const rect = heroSectionRef.current.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        
-        if (!isVisible && !isMuted) {
-          muteVideo();
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [isMuted]);
-
-  const toggleMute = () => {
-    setIsMuted(!isMuted);
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-    }
-  };
+  }, []);
   return (
     <section
       id="gateway-hero"
-      ref={heroSectionRef}
       className="relative min-h-[42vh] sm:min-h-[48vh] md:min-h-[56vh] lg:min-h-[75vh] xl:min-h-[82vh] flex items-center justify-center bg-transparent px-4 sm:px-8 md:px-12 lg:px-24 pt-24 sm:pt-28 md:pt-32 lg:pt-40 pb-10 sm:pb-12 md:pb-14 lg:pb-20 select-none animate-fade-in"
     >
       {/* 
@@ -79,7 +42,6 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
           ref={videoRef}
           autoPlay
           loop
-          muted={isMuted}
           playsInline
           className="absolute inset-0 w-full h-full object-cover filter saturate-[1.15] brightness-[0.45] contrast-[1.05]"
           style={{ objectPosition: "center 30%" }}
@@ -100,19 +62,6 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
         <div className="absolute top-1/3 left-1/4 w-2 h-2 rounded-full bg-[#FFD54F]/40 blur-[1px] animate-float-slow pointer-events-none z-20" />
         <div className="absolute top-1/2 right-1/3 w-2.5 h-2.5 rounded-full bg-[#32e875]/40 blur-[1px] animate-float-reverse pointer-events-none z-20" />
         <div className="absolute bottom-1/3 left-2/3 w-1.5 h-1.5 rounded-full bg-white/30 blur-[1px] animate-float-slow pointer-events-none z-20" />
-
-        {/* Mute Button - Bottom Right */}
-        <button
-          onClick={toggleMute}
-          className="absolute bottom-8 right-8 z-30 bg-black/40 hover:bg-black/60 backdrop-blur-sm text-white p-3 rounded-full transition-all duration-300 border border-white/20 hover:border-white/40 group"
-          aria-label={isMuted ? "Unmute" : "Mute"}
-        >
-          {isMuted ? (
-            <VolumeX className="w-5 h-5" />
-          ) : (
-            <Volume2 className="w-5 h-5" />
-          )}
-        </button>
       </div>
 
       {/* 
