@@ -438,7 +438,7 @@ function AppContent() {
     // On top, we overlay beautiful glowing radial circles using softer, extremely polished white and green gradients.
     const gradientCircles = "radial-gradient(circle at 10% 15%, rgba(255, 255, 255, 0.24) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(50, 232, 117, 0.42) 0%, transparent 65%), radial-gradient(circle at 20% 70%, rgba(5, 70, 26, 0.38) 0%, transparent 60%), radial-gradient(circle at 80% 85%, rgba(255, 255, 255, 0.18) 0%, transparent 50%), linear-gradient(to bottom, #32e875 0%, #05461a 95vh, #02200a 100%)";
     
-    if (selectedDetailedHeritageId || activeView === "heritage" || activeView === "travel" || activeView === "downloadables" || activeView === "growth" || activeView === "contact") {
+    if (selectedDetailedHeritageId) {
       return "#ffffff";
     }
     switch (activeView) {
