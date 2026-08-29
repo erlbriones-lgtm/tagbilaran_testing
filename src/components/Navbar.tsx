@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Compass, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -10,6 +11,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ activeView, setActiveView }: NavbarProps) {
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoFailed, setLogoFailed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -52,6 +54,11 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const getPathForView = (view: string) => {
+    if (view === "home") return "/";
+    return `/${view}`;
+  };
+
   return (
     <>
       <motion.header
@@ -69,8 +76,8 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
           
           {/* Desktop Symmetrical Navigation and Logo */}
           <div className="hidden xl:flex items-center justify-between w-full max-w-5xl mx-auto font-jakarta tracking-wide font-extrabold text-[12px] xl:text-[13px]" id="desktop-navbar-container">
-            <button
-              onClick={() => handleNavClick("home")}
+            <Link
+              to="/"
               className={`font-jakarta tracking-wide font-extrabold transition-all duration-300 hover:cursor-pointer pb-1 border-b-2 hover:text-[#FFD54F] hover:drop-shadow-[0_0_8px_rgba(255,213,79,0.5)] ${
                 activeView === "home"
                   ? "text-[#FFD54F] border-[#FFD54F] drop-shadow-[0_0_8px_rgba(255,213,79,0.4)]"
@@ -79,10 +86,10 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
               id="link-home"
             >
               HOME
-            </button>
+            </Link>
 
-            <button
-              onClick={() => handleNavClick("growth")}
+            <Link
+              to="/growth"
               className={`font-jakarta tracking-wide font-extrabold transition-all duration-300 hover:cursor-pointer pb-1 border-b-2 hover:text-[#FFD54F] hover:drop-shadow-[0_0_8px_rgba(255,213,79,0.5)] ${
                 activeView === "growth"
                   ? "text-[#FFD54F] border-[#FFD54F] drop-shadow-[0_0_8px_rgba(255,213,79,0.4)]"
@@ -91,10 +98,10 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
               id="link-growth"
             >
               GROWTH
-            </button>
+            </Link>
             
-            <button
-              onClick={() => handleNavClick("heritage")}
+            <Link
+              to="/heritage"
               className={`font-jakarta tracking-wide font-extrabold transition-all duration-300 hover:cursor-pointer pb-1 border-b-2 hover:text-[#FFD54F] hover:drop-shadow-[0_0_8px_rgba(255,213,79,0.5)] ${
                 activeView === "heritage"
                   ? "text-[#FFD54F] border-[#FFD54F] drop-shadow-[0_0_8px_rgba(255,213,79,0.4)]"
@@ -103,10 +110,10 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
               id="link-heritage"
             >
               HERITAGE
-            </button>
+            </Link>
             
-            <button
-              onClick={() => handleNavClick("barangay")}
+            <Link
+              to="/barangay"
               className={`font-jakarta tracking-wide font-extrabold transition-all duration-300 hover:cursor-pointer pb-1 border-b-2 hover:text-[#FFD54F] hover:drop-shadow-[0_0_8px_rgba(255,213,79,0.5)] ${
                 activeView === "barangay"
                   ? "text-[#FFD54F] border-[#FFD54F] drop-shadow-[0_0_8px_rgba(255,213,79,0.4)]"
@@ -115,10 +122,10 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
               id="link-barangay"
             >
               BARANGAY
-            </button>
+            </Link>
 
-            <button
-              onClick={() => handleNavClick("saulog")}
+            <Link
+              to="/saulog"
               className={`font-jakarta tracking-wide font-extrabold transition-all duration-300 hover:cursor-pointer pb-1 border-b-2 hover:text-[#FFD54F] hover:drop-shadow-[0_0_8px_rgba(255,213,79,0.5)] ${
                 activeView === "saulog"
                   ? "text-[#FFD54F] border-[#FFD54F] drop-shadow-[0_0_8px_rgba(255,213,79,0.4)]"
@@ -127,11 +134,11 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
               id="link-saulog"
             >
               SAULOG
-            </button>
+            </Link>
 
             {/* Centered Logo element */}
-            <div 
-              onClick={() => handleNavClick("home")}
+            <Link 
+              to="/"
               className="flex items-center justify-center cursor-pointer group select-none relative z-50 mx-2"
               id="nav-logo-centered"
             >
@@ -148,10 +155,10 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
                   <Compass className="w-4 h-4 sm:w-5 sm:h-5 animate-[spin_10s_linear_infinite]" />
                 </div>
               )}
-            </div>
+            </Link>
 
-            <button
-              onClick={() => handleNavClick("shops")}
+            <Link
+              to="/shops"
               className={`font-jakarta tracking-wide font-extrabold transition-all duration-300 hover:cursor-pointer pb-1 border-b-2 hover:text-[#FFD54F] hover:drop-shadow-[0_0_8px_rgba(255,213,79,0.5)] ${
                 activeView === "shops"
                   ? "text-[#FFD54F] border-[#FFD54F] drop-shadow-[0_0_8px_rgba(255,213,79,0.4)]"
@@ -160,10 +167,10 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
               id="link-shops"
             >
               SHOPS
-            </button>
+            </Link>
 
-            <button
-              onClick={() => handleNavClick("downloadables")}
+            <Link
+              to="/downloadables"
               className={`font-jakarta tracking-wide font-extrabold transition-all duration-300 hover:cursor-pointer pb-1 border-b-2 hover:text-[#FFD54F] hover:drop-shadow-[0_0_8px_rgba(255,213,79,0.5)] ${
                 activeView === "downloadables"
                   ? "text-[#FFD54F] border-[#FFD54F] drop-shadow-[0_0_8px_rgba(255,213,79,0.4)]"
@@ -172,10 +179,10 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
               id="link-downloadables"
             >
               ASSETS
-            </button>
+            </Link>
 
-            <button
-              onClick={() => handleNavClick("travel")}
+            <Link
+              to="/travel"
               className={`font-jakarta tracking-wide font-extrabold transition-all duration-300 hover:cursor-pointer pb-1 border-b-2 hover:text-[#FFD54F] hover:drop-shadow-[0_0_8px_rgba(255,213,79,0.5)] ${
                 activeView === "travel"
                   ? "text-[#FFD54F] border-[#FFD54F] drop-shadow-[0_0_8px_rgba(255,213,79,0.4)]"
@@ -184,10 +191,10 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
               id="link-travel"
             >
               TRAVEL
-            </button>
+            </Link>
 
-            <button
-              onClick={() => handleNavClick("about")}
+            <Link
+              to="/about"
               className={`font-jakarta tracking-wide font-extrabold transition-all duration-300 hover:cursor-pointer pb-1 border-b-2 hover:text-[#FFD54F] hover:drop-shadow-[0_0_8px_rgba(255,213,79,0.5)] ${
                 activeView === "about"
                   ? "text-[#FFD54F] border-[#FFD54F] drop-shadow-[0_0_8px_rgba(255,213,79,0.4)]"
@@ -196,10 +203,10 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
               id="link-about"
             >
               ABOUT
-            </button>
+            </Link>
 
-            <button
-              onClick={() => handleNavClick("contact")}
+            <Link
+              to="/contact"
               className={`font-jakarta tracking-wide font-extrabold transition-all duration-300 hover:cursor-pointer pb-1 border-b-2 hover:text-[#FFD54F] hover:drop-shadow-[0_0_8px_rgba(255,213,79,0.5)] ${
                 activeView === "contact"
                   ? "text-[#FFD54F] border-[#FFD54F] drop-shadow-[0_0_8px_rgba(255,213,79,0.4)]"
@@ -208,7 +215,7 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
               id="link-contact"
             >
               CONTACT
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Layout (centered logo with burger on the right) */}
@@ -217,8 +224,8 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
             <div className="w-8" />
 
             {/* Centered Logo for Mobile */}
-            <div 
-              onClick={() => handleNavClick("home")}
+            <Link 
+              to="/"
               className="flex items-center justify-center cursor-pointer group select-none"
               id="nav-logo-mobile"
             >
@@ -235,7 +242,7 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
                   <Compass className="w-4 h-4 animate-[spin_10s_linear_infinite]" />
                 </div>
               )}
-            </div>
+            </Link>
 
             {/* Mobile Burger Toggle UI */}
             <button
@@ -290,18 +297,22 @@ export default function Navbar({ activeView, setActiveView }: NavbarProps) {
                   { label: "THE CIVIC & EXECUTIVE HEART", id: "about", view: "about" },
                   { label: "CONTACT OFFICIALS", id: "contact", view: "contact" }
                 ].map((link, lIdx) => (
-                  <motion.button
+                  <motion.div
                     key={link.id}
                     initial={{ x: 25, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: lIdx * 0.05 }}
-                    onClick={() => handleNavClick(link.view as any)}
-                    className={`text-left w-full font-jakarta text-sm sm:text-base font-black tracking-wide uppercase transition-all py-1 cursor-pointer hover:translate-x-[4px] flex items-center justify-start gap-3 group hover:text-[#FFD54F] ${
-                      activeView === link.view ? "text-[#FFD54F]" : "text-white/80"
-                    }`}
                   >
-                    <span>{link.id.toUpperCase()}</span>
-                  </motion.button>
+                    <Link
+                      to={getPathForView(link.view)}
+                      onClick={() => setIsOpen(false)}
+                      className={`text-left w-full font-jakarta text-sm sm:text-base font-black tracking-wide uppercase transition-all py-1 cursor-pointer hover:translate-x-[4px] flex items-center justify-start gap-3 group hover:text-[#FFD54F] ${
+                        activeView === link.view ? "text-[#FFD54F]" : "text-white/80"
+                      }`}
+                    >
+                      <span>{link.id.toUpperCase()}</span>
+                    </Link>
+                  </motion.div>
                 ))}
               </nav>
             </motion.div>

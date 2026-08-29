@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { Routes, Route, useLocation, useNavigate, useParams } from "react-router-dom";
 import { 
   Sparkles, 
   MapPin, 
@@ -203,10 +204,10 @@ const TimelineMilestone = React.memo(function TimelineMilestone({ milestone, isE
   );
 });
 
-export default function App() {
-  // Navigation / Theme Styling Switch State
-  const [activeView, setActiveView] = useState<"home" | "growth" | "heritage" | "shops" | "downloadables" | "barangay" | "saulog" | "travel" | "about" | "contact">("home");
-  const [selectedDetailedHeritageId, setSelectedDetailedHeritageId] = useState<string | null>(null);
+function AppContent() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = useParams();
   const [mayorImageLoaded, setMayorImageLoaded] = useState(false);
 
   // Preload and cache checking for Mayor's portrait image to prevent flicker if cached
@@ -222,69 +223,48 @@ export default function App() {
 
   // Elegant structural skeleton loader state
   const [isPageLoading, setIsPageLoading] = useState(false);
-  const [loadingView, setLoadingView] = useState<"home" | "growth" | "heritage" | "shops" | "downloadables" | "barangay" | "saulog" | "travel" | "about" | "contact" | null>(null);
 
   useEffect(() => {
-    // When activeView changes, scroll to top and trigger custom shimmery skeleton load state for 600ms
+    // When location changes, scroll to top and trigger custom shimmery skeleton load state for 600ms
     setIsPageLoading(true);
-    setLoadingView(activeView);
     window.scrollTo({ top: 0, behavior: "smooth" });
     const timer = setTimeout(() => {
       setIsPageLoading(false);
-      setLoadingView(null);
     }, 600);
     return () => clearTimeout(timer);
-  }, [activeView]);
+  }, [location.pathname]);
 
-  // Synchronize state changes -> URL address bar
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const validViews = ["home", "growth", "heritage", "shops", "downloadables", "barangay", "saulog", "travel", "about", "contact"];
-    
-    const currentView = params.get("view") || "home";
-    const currentHeritageId = params.get("heritageId");
-    
-    if (activeView !== currentView || selectedDetailedHeritageId !== currentHeritageId) {
-      if (activeView === "home") {
-        params.delete("view");
-      } else if (validViews.includes(activeView)) {
-        params.set("view", activeView);
-      }
-      
-      if (selectedDetailedHeritageId) {
-        params.set("heritageId", selectedDetailedHeritageId);
-      } else {
-        params.delete("heritageId");
-      }
-      
-      const newSearch = params.toString();
-      const newUrl = `${window.location.pathname}${newSearch ? "?" + newSearch : ""}`;
-      window.history.pushState(null, "", newUrl);
+  // Determine active view from URL
+  const getActiveView = (): "home" | "growth" | "heritage" | "shops" | "downloadables" | "barangay" | "saulog" | "travel" | "about" | "contact" => {
+    const path = location.pathname;
+    if (path === "/" || path === "") return "home";
+    if (path.startsWith("/growth")) return "growth";
+    if (path.startsWith("/heritage")) return "heritage";
+    if (path.startsWith("/shops")) return "shops";
+    if (path.startsWith("/downloadables")) return "downloadables";
+    if (path.startsWith("/barangay")) return "barangay";
+    if (path.startsWith("/saulog")) return "saulog";
+    if (path.startsWith("/travel")) return "travel";
+    if (path.startsWith("/about")) return "about";
+    if (path.startsWith("/contact")) return "contact";
+    return "home";
+  };
+
+  const activeView = getActiveView();
+  const selectedDetailedHeritageId = params.id || null;
+
+  // Navigation handler
+  const handleNavigate = (view: string) => {
+    if (view === "home") {
+      navigate("/");
+    } else {
+      navigate(`/${view}`);
     }
-  }, [activeView, selectedDetailedHeritageId]);
+  };
 
-  // Synchronize URL -> state (on mount and back/forward browser actions)
-  useEffect(() => {
-    const handleUrlSync = () => {
-      const params = new URLSearchParams(window.location.search);
-      const viewParam = params.get("view") as any;
-      const heritageParam = params.get("heritageId");
-      const validViews = ["home", "growth", "heritage", "shops", "downloadables", "barangay", "saulog", "travel", "about", "contact"];
-      
-      if (viewParam && validViews.includes(viewParam)) {
-        setActiveView(viewParam);
-      } else {
-        setActiveView("home");
-      }
-      
-      setSelectedDetailedHeritageId(heritageParam);
-    };
-
-    handleUrlSync();
-
-    window.addEventListener("popstate", handleUrlSync);
-    return () => window.removeEventListener("popstate", handleUrlSync);
-  }, []);
+  const handleHeritageDetail = (id: string) => {
+    navigate(`/heritage/${id}`);
+  };
 
   const timelineScrollRef = useRef<HTMLDivElement>(null);
 
@@ -530,22 +510,21 @@ export default function App() {
       <Navbar 
         activeView={selectedDetailedHeritageId ? ("" as any) : activeView} 
         setActiveView={(view) => {
-          setSelectedDetailedHeritageId(null);
-          setActiveView(view);
+          handleNavigate(view);
         }} 
       />
 
       {/* Dynamic Main Views container */}
       <AnimatePresence mode="wait">
-        {isPageLoading && loadingView ? (
+        {isPageLoading ? (
           <motion.div
-            key={`skeleton-${loadingView}`}
+            key={`skeleton-${activeView}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <PageSkeleton view={loadingView} />
+            <PageSkeleton view={activeView} />
           </motion.div>
         ) : selectedDetailedHeritageId ? (
           <motion.div
@@ -558,7 +537,7 @@ export default function App() {
             <HeritageDetailView 
               heritage={detailedHeritageList.find(h => h.id === selectedDetailedHeritageId) || detailedHeritageList[0]}
               onBack={() => {
-                setSelectedDetailedHeritageId(null);
+                navigate("/heritage");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
             />
@@ -574,7 +553,7 @@ export default function App() {
           >
             {/* Immersive luxurious resort bedroom view from HOME.jpg */}
             <Hero 
-              onSwitchToHeritage={() => setActiveView("heritage")}
+              onSwitchToHeritage={() => handleNavigate("heritage")}
               weatherDescription={liveWind}
               temperature={liveTemp}
             />
@@ -682,7 +661,7 @@ export default function App() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <HeritageEcosystemSection onExploreHeritage={() => {
-                setActiveView("heritage");
+                handleNavigate("heritage");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }} />
             </motion.div>
@@ -695,7 +674,7 @@ export default function App() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <BarangayEcosystemSection onExploreBarangays={() => {
-                setActiveView("barangay");
+                handleNavigate("barangay");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }} />
             </motion.div>
@@ -708,7 +687,7 @@ export default function App() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <SaulogEcosystemSection onExploreSaulog={() => {
-                setActiveView("saulog");
+                handleNavigate("saulog");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }} />
             </motion.div>
@@ -725,7 +704,7 @@ export default function App() {
           >
             {/* DUAL INFINITE MARQUEE CAROUSEL SHOWCASE */}
             <HeritageMarquee onCardClick={(id) => {
-              setSelectedDetailedHeritageId(id);
+              handleHeritageDetail(id);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }} />
 
@@ -1116,11 +1095,27 @@ export default function App() {
       {/* FOOTER: Full-featured modular footer */}
       <Footer 
         setActiveView={(view) => {
-          setSelectedDetailedHeritageId(null);
-          setActiveView(view);
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          handleNavigate(view);
         }}
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<AppContent />} />
+      <Route path="/growth" element={<AppContent />} />
+      <Route path="/heritage" element={<AppContent />} />
+      <Route path="/heritage/:id" element={<AppContent />} />
+      <Route path="/shops" element={<AppContent />} />
+      <Route path="/downloadables" element={<AppContent />} />
+      <Route path="/barangay" element={<AppContent />} />
+      <Route path="/saulog" element={<AppContent />} />
+      <Route path="/travel" element={<AppContent />} />
+      <Route path="/about" element={<AppContent />} />
+      <Route path="/contact" element={<AppContent />} />
+    </Routes>
   );
 }
