@@ -43,7 +43,7 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
           autoPlay
           loop
           playsInline
-          className="absolute inset-0 w-full h-full object-cover filter saturate-[1.15] brightness-[0.65] contrast-[1.05]"
+          className="absolute inset-0 w-full h-full object-cover filter saturate-[1.15] brightness-[0.8] contrast-[1.05]"
           style={{ objectPosition: "center 30%" }}
         >
           <source src="/WEBM/tagb (2).webm" type="video/webm" />
