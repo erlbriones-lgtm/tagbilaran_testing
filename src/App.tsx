@@ -479,7 +479,7 @@ function AppContent() {
 
   return (
     <div 
-      className={`min-h-screen transition-all duration-500 font-sans overflow-x-hidden relative ${(selectedDetailedHeritageId || activeView === "heritage" || activeView === "travel" || activeView === "barangay" || activeView === "saulog" || activeView === "shops" || activeView === "downloadables") ? "text-[#05461a] bg-white animate-fade-in" : "text-white"}`} 
+      className={`min-h-screen transition-all duration-500 font-sans overflow-x-hidden relative ${(selectedDetailedHeritageId || activeView === "heritage" || activeView === "travel" || activeView === "barangay" || activeView === "saulog" || activeView === "shops" || activeView === "downloadables") ? "text-[#05461a] animate-fade-in" : "text-white"}`} 
       style={{ background: getBackgroundStyle() }}
       id="digital-tourism-root"
     >
