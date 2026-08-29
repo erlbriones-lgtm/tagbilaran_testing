@@ -28,7 +28,7 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
   return (
     <section
       id="gateway-hero"
-      className="relative min-h-[42vh] sm:min-h-[48vh] md:min-h-[56vh] lg:min-h-[75vh] xl:min-h-[82vh] flex items-center justify-center bg-transparent px-4 sm:px-8 md:px-12 lg:px-24 pt-24 sm:pt-28 md:pt-32 lg:pt-40 pb-10 sm:pb-12 md:pb-14 lg:pb-20 select-none animate-fade-in"
+      className="relative min-h-[55vh] sm:min-h-[60vh] md:min-h-[70vh] lg:min-h-[85vh] xl:min-h-[95vh] flex items-center justify-center bg-transparent px-4 sm:px-8 md:px-12 lg:px-24 pt-24 sm:pt-28 md:pt-32 lg:pt-40 pb-10 sm:pb-12 md:pb-14 lg:pb-20 select-none animate-fade-in"
     >
       {/* 
         PREMIUM FULL-SCREEN VIDEO BACKDROP
@@ -36,7 +36,7 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
       */}
       <div 
         id="hero-background-media" 
-        className="absolute inset-0 z-0 overflow-hidden bg-gradient-to-b from-[#0c180b] via-[#142813] to-[#0d1b0c]"
+        className="absolute inset-0 z-0 bg-gradient-to-b from-[#0c180b] via-[#142813] to-[#0d1b0c]"
       >
         <video
           ref={videoRef}
@@ -44,7 +44,7 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
           loop
           playsInline
           className="absolute inset-0 w-full h-full object-cover filter saturate-[1.15] brightness-[0.8] contrast-[1.05]"
-          style={{ objectPosition: "center 30%" }}
+          style={{ objectPosition: "center bottom" }}
         >
           <source src="/WEBM/tagb (2).webm" type="video/webm" />
         </video>
