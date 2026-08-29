@@ -46,7 +46,7 @@ export default function Hero({ onSwitchToHeritage, weatherDescription, temperatu
           className="absolute inset-0 w-full h-full object-cover filter saturate-[1.15] brightness-[0.45] contrast-[1.05]"
           style={{ objectPosition: "center 30%" }}
         >
-          <source src="/WEBM/final tagbilaran tourism.webm" type="video/webm" />
+          <source src="/WEBM/tagb (2).webm" type="video/webm" />
         </video>
         
         {/* Soft edge gradients and atmospheric overlay */}
